@@ -1,0 +1,2 @@
+build --@rules_cuda//cuda:compiler=nvcc
+build --incompatible_enable_cc_toolchain_resolution

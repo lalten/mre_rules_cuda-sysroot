@@ -1,0 +1,26 @@
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:jammy-20231004
+      options: --privileged
+
+    steps:
+      - name: Install Bazel
+        run: |
+          apt-get update
+          apt-get install -y curl
+          curl -fsSL https://github.com/bazelbuild/bazelisk/releases/download/v1.18.0/bazelisk-linux-amd64 > /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install Cuda
+        run: |
+          curl -fsSLO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+          dpkg -i cuda-keyring_1.1-1_all.deb
+          apt-get update
+          apt-get install -y cuda-12-1
+      - uses: actions/checkout@v4
+      - run: bazel build //...
